@@ -32,7 +32,7 @@ app.configure('development', function(){
 });
 
 //Send index
-app.get('/', routes.index);
+//app.get('/', routes.index);
 
 //app.get('/users', user.list);
 
@@ -57,6 +57,82 @@ io.sockets.on('connection', function (socket) {
 
 
 }); //End Socket IO
+
+
+//DRIVER
+app.get('/driver/:driver_id?', function(req, res) {
+  var driverID = req.param('driver_id') ? req.param('driver_id') : "" + parseInt(Math.round(Math.random()*103843)+7);
+  
+  var whereParams = {driver_id: driverID};
+
+  // chatLogModel.update(whereParams, whereParams, {upsert: true}, function(err, room){
+  //     if (err) {
+  //       throw err;
+  //       console.log("Could not upsert user");
+  //     }
+  //     else {
+  //       if (room.chat_log) {
+  //         //console.log(room);
+  //       }
+  //       //console.log("Chat Log in DB");
+  //     }
+  //   });
+  console.log("Driver ID: " + driverID);
+  //Get previous chat logs and render them in the file 
+  res.render('index', {
+    //RENDERVARS: { 
+    //  room_id: roomID
+    //}
+  });
+});
+
+
+app.get('/gripper/:gripper_id?', function(req, res) {
+  var gripperID = req.param('gripper_id') ? req.param('gripper_id') : "" + parseInt(Math.round(Math.random()*103843)+17);
+  
+  var whereParams = {gripper_id: gripperID};
+
+  // chatLogModel.update(whereParams, whereParams, {upsert: true}, function(err, room){
+  //     if (err) {
+  //       throw err;
+  //       console.log("Could not upsert user");
+  //     }
+  //     else {
+  //       if (room.chat_log) {
+  //         //console.log(room);
+  //       }
+  //       //console.log("Chat Log in DB");
+  //     }
+  //   });
+  console.log("Gripper ID: " + gripperID);
+  //Get previous chat logs and render them in the file 
+  res.render('index', {
+    //RENDERVARS: { 
+    //  room_id: roomID
+    //}
+  });
+});
+
+
+app.get('/brobot/:bot_id?', function(req, res) {
+  var botID = req.param('bot_id') ? req.param('bot_id') : "" + parseInt(Math.round(Math.random()*103843)+334);
+  
+  var whereParams = {bot_id: botID};
+  console.log("Bot ID: " + botID);
+  //Get previous chat logs and render them in the file 
+  res.render('index', {
+    //RENDERVARS: { 
+    //  room_id: roomID
+    //}
+  });
+});
+
+
+
+
+
+
+
 
 
 
