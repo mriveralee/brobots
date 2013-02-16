@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>Audio Test</title>
+    <title><%=PAGE_TITLE%></title>
     <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script type='text/javascript' src="jquery.min.js"></script> 
     <script type="text/javascript" src="brobots.js"></script>
@@ -11,9 +11,8 @@
 </head>
 <body>
     <center>
-    <button onclick="test4Ints()"> Driver </button>
-    <button onclick="test2Ints()"> Gripper </button>
-    <button onclick="testBot()">  Bot  </button>
+    <button onclick="sendDriveDataToServer()"> Driver </button>
+    <button onclick="sendGripDataToServer()"> Gripper </button>
     </center>
 </body>
 </html>

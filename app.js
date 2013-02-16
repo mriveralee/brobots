@@ -35,27 +35,27 @@ app.configure('development', function(){
 //app.get('/', routes.index);
 
 //DRIVER
-app.get('/driver/:driver_id?', function(req, res) {
+app.get('/driver', function(req, res) {
   var driverID = req.param('driver_id') ? req.param('driver_id') : "" + parseInt(Math.round(Math.random()*103843)+7);
   console.log("Driver ID: " + driverID);
   //Get previous chat logs and render them in the file 
-  res.render('index', {});
+  res.render('index', {PAGE_TITLE: "Brobots - Driver"});
 });
 
 
-app.get('/gripper/:gripper_id?', function(req, res) {
+app.get('/gripper', function(req, res) {
   var gripperID = req.param('gripper_id') ? req.param('gripper_id') : "" + parseInt(Math.round(Math.random()*103843)+17);
   console.log("Gripper ID: " + gripperID);
   //Get previous chat logs and render them in the file 
-  res.render('index', {});
+  res.render('index', {PAGE_TITLE: "Brobots - Gripper"});
 });
 
 
-app.get('/brobot/:bot_id?', function(req, res) {
+app.get('/brobot', function(req, res) {
   var botID = req.param('bot_id') ? req.param('bot_id') : "" + parseInt(Math.round(Math.random()*103843)+334);
   console.log("Bot ID: " + botID);
   //Get previous chat logs and render them in the file 
-  res.render('index', {});
+  res.render('index', {PAGE_TITLE: "BroBots - Bot"});
 });
 
 
@@ -66,7 +66,8 @@ io.sockets.on('connection', function (socket) {
   
   function updatedBotData(botData) {
     if (botData) {
-      socket.emit('updated-bot-data', botData);
+      console.log("Emitting received bot data");
+      socket.broadcast.emit('updated-bot-data', botData);
     }
   }
  

@@ -2,10 +2,9 @@
 var DEBUG = true;
 /////// GLOBAL VARS 
 var GLOBAL = {};
-  GLOBAL.userID = Math.round(Math.random()*1127640+13);
-  //Get user type from url
-  GLOBAL.userType = (document.URL).replace(/driver|gripper|brobot/, "");
-}
+//Get user type from url
+GLOBAL.userType = (document.URL).replace(/.*(?=(driver|brobot|gripper))/, "");
+GLOBAL.userID = Math.round(Math.random()*1127640+13);
 
 //Socket Connection
 var socket = io.connect('http://localhost:3000');
@@ -49,11 +48,13 @@ if (DEBUG) {
 function receivedBotDataFromServer(botData) {
     if (GLOBAL.userType.toLowerCase() == CLIENT_TYPE.brobot) {
         var numValues = botData.values;
-        if (numValues === 2) {
+        if (numValues == 2) {
             console.log("Bot Received Grip Data: " + botData );
+            console.log(botData);
         }
         else if ( numValues == 4) {
-            console.log("Bot Received Drive Data: " + botData );
+            console.log("Bot Received Drive Data!");
+            console.log(botData);
         }
         
     }
@@ -77,8 +78,7 @@ function sendGripDataToServer(angle1, angle2) {
 
 //Send Driver Data to Server through Socket
 function sendDriveDataToServer(m1Dir, m1PWM, m2Dir, m2PWM) {
-    
-    if (GLOBAL.userType.toLowerCase() == CLIENT_TYPE.driver)
+    if (GLOBAL.userType.toLowerCase() == CLIENT_TYPE.driver) {
         m1Dir = (m1Dir) ? m1Dir : 0.0;
         m1PWM = (m1PWM) ? m1PWM : 0.0; 
         m2Dir = (m2Dir) ? m2Dir : 0.0; 
