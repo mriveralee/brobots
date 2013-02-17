@@ -132,10 +132,10 @@ function init() {
   }
 
     // Nick's variables
-    const LEFT_lowerYBound = 200; // Calculated empirically
-    const LEFT_upperYBound = 500; // Calculated empirically
+    const Y_LowBound = 200; // Calculated empirically
+    const Y_HighBound = 500; // Calculated empirically
 
-    const speed = 0.75;           // Maximum duty cycle of motors
+    const speed = 1;//0.75;           // Maximum duty cycle of motors
     const yaw_Scalar_max = 0.5;   // Maximum puck Scalar value
     const PWM_lower = 0;                // 10-bit timer
     const PWM_upper = Math.pow(2,10)-1; // Will map to OCR1A on M2
@@ -159,7 +159,7 @@ function init() {
     var leftHand;
     var rightHand;
     var PWM_desired = 0;
-    var PWM_mapping = (PWM_upper-PWM_lower)/(LEFT_upperYBound-LEFT_lowerYBound);
+    var PWM_mapping = (PWM_upper-PWM_lower)/(Y_HighBound-Y_LowBound);
     var rightStrPitch;// [degrees]
     var rightStrRoll; // [degrees]
     var rightStrYaw;  // [degrees]
@@ -189,30 +189,26 @@ function init() {
         // Compare hand positions along the X-axis: Left hand is more negative
         if(obj.hands[0].palmPosition[0] < obj.hands[1].palmPosition[0]){
           leftHand = obj.hands[0];
-          var leftStr = JSON.stringify(leftHand.palmPosition);
           rightHand = obj.hands[1];
-          var rightStr = JSON.stringify(rightHand.palmPosition);
         }
         else{
           leftHand = obj.hands[1];
-          var leftStr = JSON.stringify(leftHand.palmPosition);
           rightHand = obj.hands[0];
-          var rightStr = JSON.stringify(rightHand.palmPosition);
         }
 
         // ______________________________________
         //  +Motor speed calculation (left hand)
         // ______________________________________
-        if (leftHand.palmPosition[1] <= LEFT_lowerYBound){
+        if (leftHand.palmPosition[1] <= Y_LowBound){
           // If hand is low, let's stop the robot!
           PWM_desired = 0;
         }
-        else if(leftHand.palmPosition[1] >= LEFT_upperYBound){
+        else if(leftHand.palmPosition[1] >= Y_HighBound){
           // If hand is higher than our upper bound, assume it's at the upper bound.
           PWM_desired = 1023;
         }
         else{
-          PWM_desired = (PWM_mapping*(leftHand.palmPosition[1]-LEFT_lowerYBound));
+          PWM_desired = (PWM_mapping*(leftHand.palmPosition[1]-Y_LowBound));
         }
 
         // ______________________________________
@@ -226,31 +222,38 @@ function init() {
         m1Dir = 1.0;
         m2Dir = 1.0;
 
-        if (rightHand.palmPosition[1] <= LEFT_lowerYBound){
+        if (rightHand.palmPosition[1] <= Y_LowBound){
           // If hand is low, let's stop the robot!
           m1Dir = 1.0;
           m2Dir = 1.0;
         }
-        else if(rightHand.palmPosition[1] >= LEFT_upperYBound){
+        else if(rightHand.palmPosition[1] >= Y_HighBound){
           // If hand is higher than our upper bound, assume it's at the upper bound.
           m1Dir = 1.0;
           m2Dir = 1.0
         }
         rightStrYaw = JSON.stringify(rightHand.direction[0]*RAD2DEG);
         // Make yaw positive within the bounds
-        RIGHT_yaw = rightHand.direction[0]*RAD2DEG;
-        if(RIGHT_yaw < RIGHT_yawCCWBound){ RIGHT_yaw = RIGHT_yawCCWBound; }
-        if(RIGHT_yaw > RIGHT_yawCWBound){ RIGHT_yaw = RIGHT_yawCWBound; }
-        RIGHT_yaw += RIGHT_yawCCWBound; // Now from [0-50] degrees
+        RIGHT_yaw = rightHand.direction[0]*RAD2DEG; // [-40,10] deg
+        //Greater than left bound
+        if(RIGHT_yaw < RIGHT_yawCCWBound) { 
+          RIGHT_yaw = RIGHT_yawCCWBound; 
+        }
+        //Greater than Right Bound
+        if(RIGHT_yaw > RIGHT_yawCWBound) { 
+          RIGHT_yaw = RIGHT_yawCWBound; 
+        }
+        RIGHT_yaw -= RIGHT_yawCCWBound; // Now from [0-50] degrees
 
         ROBOT_yaw = RIGHT_yaw*YAW_mapping; // Now we've got robot yaw in [deg] between [0-90]
-        ROBOT_yaw = ROBOT_yaw-ROBOT_turningAngle;  // Robot yaw [-45,90] [deg]
+        ROBOT_yaw = ROBOT_yaw-ROBOT_turningAngle;  // Robot yaw [-45,+45] [deg]
         yawScalar = (ROBOT_yaw)/(2*ROBOT_turningAngle); // Dimensionless [-.5,.5]
-
+        console.log("RB Yaw: " + ROBOT_yaw);
+        console.log("Yaw Scalar: " + yawScalar);
         // Scale the PWM output for each motor  
         if(yawScalar < 0){
           // If we want to turn left:
-          m1PWM = PWM_desired*(speed - yawScalar); // Will map to OCR1B on the M2
+          m1PWM = PWM_desired*(speed + yawScalar); // Will map to OCR1B on the M2
           m2PWM = PWM_desired*(speed);               // Will map to OCR3A on the M2
         }
         else{
@@ -284,14 +287,99 @@ function init() {
       }
     } // End check for Hands being NULL
     // document.getElementById("output").innerHTML = 'No hands!!';
-
   }
 
 
+
+  const ARM_ANGLE_MAPPING = 0.6;
+  const GRIP_ANGLE_MAPPING = 0.15;
 ////////////////////////////////////////////
 //----Function that captures GRIPPER Data---
 ////////////////////////////////////////////
 function captureGripperData(obj) {
+    var leftHand;
+    var rightHand;
+    var PWM_desired = 0;
+    var PWM_mapping = (PWM_upper-PWM_lower)/(Y_HighBound-Y_LowBound);
+
+    // Output Variables for the Gripper
+    var angle1, angle2;
+    
+    // If we don't have both hands recognized, set the motor PWM to 0 so 
+    //they won't move!
+    if(obj.hands && obj.hands.length == 2) {
+        var hasEnoughFingers = obj.pointables && obj.pointables.length >= 7;
+
+        if (!hasEnoughFingers) {
+          //Quit function if we don't have more than 2 fingers
+          return;
+        }
+
+        // ______________________________________
+        // +Hand sorting function
+        // ______________________________________
+        // Compare hand positions along the X-axis: Left hand is more negative
+        if(obj.hands[0].palmPosition[0] < obj.hands[1].palmPosition[0]){
+          leftHand = obj.hands[0];
+          rightHand = obj.hands[1];
+        }
+        else{
+          leftHand = obj.hands[1];
+          rightHand = obj.hands[0];
+        }
+
+        // ______________________________________
+        //  +Angle calculation (left hand)
+        // ______________________________________
+        //CLIP Y Bounds on Left Hand
+        if (leftHand.palmPosition[1] <= Y_LowBound){
+          // If hand is low, let's stop the robot!
+          angle1 = 0;
+        }
+        else if(leftHand.palmPosition[1] >= Y_HighBound){
+          // If hand is higher than our upper bound, assume it's at the upper bound.
+          angle1 = 180;
+        }
+        else {
+          angle1 = (ARM_ANGLE_MAPPING*(leftHand.palmPosition[1]-Y_LowBound));
+        }
+        // ______________________________________
+        //  +Grip Angle Calculation 
+        // ______________________________________
+        //CLIP Y Bounds on Right Hand
+        if (rightHand.palmPosition[1] <= Y_LowBound){
+          // If hand is low, let's stop the robot!
+          angle2 = 0;
+        }
+        else if(rightHand.palmPosition[1] >= Y_HighBound){
+          // If hand is higher than our upper bound, assume it's at the upper bound.
+          angle2 = 45;
+        }
+        else{
+          angle2 = (GRIP_ANGLE_MAPPING*(rightHand.palmPosition[1]-Y_LowBound));
+        }
+       
+        // ______________________________________
+        //  -Direction Calculation (right hand)
+        // ______________________________________
+        document.getElementById("output").innerHTML =
+          'Left Hand Z: ' + leftHand.palmPosition[1]
+        +  '<br>ARM Angle: ' + angle1
+        +  '<br>Right Hand Z: ' + rightHand.palmPosition[2]
+        +  '<br>Grip Angle: ' + angle2;
+
+
+        //Send our Vars to the Server Using sockets
+        sendGripDataToServer(angle1, angle2);
+      }
+      // ______________________________________
+      //  If there are more than two hands identified, stop the robot
+      // ______________________________________
+      else{
+        // If we don't have both hands recognized, set the motor PWM to 0 so they won't move!
+        document.getElementById("output").innerHTML = 'MORE THAN 2 HANDS!!!';
+      }
+
 
 
 
