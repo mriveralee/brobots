@@ -136,7 +136,7 @@ function init() {
     const LEFT_upperYBound = 500; // Calculated empirically
 
     const speed = 0.75;           // Maximum duty cycle of motors
-    const yaw_scaler_max = 0.5;   // Maximum puck scaler value
+    const yaw_Scalar_max = 0.5;   // Maximum puck Scalar value
     const PWM_lower = 0;                // 10-bit timer
     const PWM_upper = Math.pow(2,10)-1; // Will map to OCR1A on M2
 
@@ -212,7 +212,7 @@ function init() {
           PWM_desired = 1023;
         }
         else{
-          PWM_desired = (PWM_mapping*(leftHand.palmPosition[1]-LEFT_lowerYBound))+LEFT_lowerYBound;
+          PWM_desired = (PWM_mapping*(leftHand.palmPosition[1]-LEFT_lowerYBound));
         }
 
         // ______________________________________
@@ -245,18 +245,18 @@ function init() {
 
         ROBOT_yaw = RIGHT_yaw*YAW_mapping; // Now we've got robot yaw in [deg] between [0-90]
         ROBOT_yaw = ROBOT_yaw-ROBOT_turningAngle;  // Robot yaw [-45,90] [deg]
-        yawScaler = (ROBOT_yaw)/(2*ROBOT_turningAngle); // Dimensionless [-.5,.5]
+        yawScalar = (ROBOT_yaw)/(2*ROBOT_turningAngle); // Dimensionless [-.5,.5]
 
         // Scale the PWM output for each motor  
-        if(yawScaler < 0){
+        if(yawScalar < 0){
           // If we want to turn left:
-          m1PWM = PWM_desired*(speed - yawScaler); // Will map to OCR1B on the M2
+          m1PWM = PWM_desired*(speed - yawScalar); // Will map to OCR1B on the M2
           m2PWM = PWM_desired*(speed);               // Will map to OCR3A on the M2
         }
         else{
           // If we want to turn right:
           m1PWM = PWM_desired*(speed);               // Will map to OCR1B on the M2
-          m2PWM = PWM_desired*(speed-yawScaler);   // Will map to OCR3A on the M2
+          m2PWM = PWM_desired*(speed-yawScalar);   // Will map to OCR3A on the M2
         }
         // ______________________________________
         //  -Direction Calculation (right hand)
