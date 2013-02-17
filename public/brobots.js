@@ -7,7 +7,7 @@ GLOBAL.userType = (document.URL).replace(/.*(?=(driver|brobot|gripper))/, "");
 GLOBAL.userID = Math.round(Math.random()*1127640+13);
 
 //Socket Connection
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect(window.location.hostname);
 
 
 //Test socket for bot data

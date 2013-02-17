@@ -1,14 +1,18 @@
 {
   "name": "brobots",
-  "version": "0.0.1",
+  "version": "0.0.1-2",
   "private": false,
   "scripts": {
-    "start": "node app"
+    "start": "node app.js"
   },
   "dependencies": {
     "express": "3.1.0",
     "ejs": "*",
     "socket.io": "*",
     "socket.io-client": "*"
+  },
+  "subdomain": "mriveralee.brobots",
+  "engines": {
+    "node": "0.8.x"
   }
 }
