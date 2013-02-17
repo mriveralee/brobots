@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -38,7 +37,6 @@ app.configure('development', function(){
 app.get('/driver', function(req, res) {
   var driverID = req.param('driver_id') ? req.param('driver_id') : "" + parseInt(Math.round(Math.random()*103843)+7);
   console.log("Driver ID: " + driverID);
-  //Get previous chat logs and render them in the file 
   res.render('index', {PAGE_TITLE: "Brobots - Driver"});
 });
 
@@ -46,7 +44,6 @@ app.get('/driver', function(req, res) {
 app.get('/gripper', function(req, res) {
   var gripperID = req.param('gripper_id') ? req.param('gripper_id') : "" + parseInt(Math.round(Math.random()*103843)+17);
   console.log("Gripper ID: " + gripperID);
-  //Get previous chat logs and render them in the file 
   res.render('index', {PAGE_TITLE: "Brobots - Gripper"});
 });
 
@@ -54,14 +51,13 @@ app.get('/gripper', function(req, res) {
 app.get('/brobot', function(req, res) {
   var botID = req.param('bot_id') ? req.param('bot_id') : "" + parseInt(Math.round(Math.random()*103843)+334);
   console.log("Bot ID: " + botID);
-  //Get previous chat logs and render them in the file 
   res.render('index', {PAGE_TITLE: "BroBots - Bot"});
 });
 
 
 
 
-
+//Socket-IO Messages
 io.sockets.on('connection', function (socket) {
   
   function updatedBotData(botData) {
