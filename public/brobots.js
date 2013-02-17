@@ -68,8 +68,8 @@ function sendGripDataToServer(angle1, angle2) {
         angle2 = (angle2) ? angle2 : 0.0; 
 
         var gripData = {
-            angle1: angle1,
-            angle2: angle2,
+            angle1: Math.round(angle1),
+            angle2: Math.round(angle2),
             values: 2
         };
         socket.emit('updated-grip-data', gripData);
@@ -86,10 +86,10 @@ function sendDriveDataToServer(m1PWM, m1Dir, m2PWM, m2Dir) {
 
 
         var driveData = {
-            m1Dir: m1Dir,
-            m1PWM: m1PWM,
-            m2Dir: m2Dir,
-            m2PWM: m2PWM,
+            m1Dir: Math.round(m1Dir),
+            m1PWM: Math.round(m1PWM),
+            m2Dir: Math.round(m2Dir),
+            m2PWM: Math.round(m2PWM),
             values: 4
         };
 
