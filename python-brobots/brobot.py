@@ -24,19 +24,28 @@ RightDirB = GPIO1_3
 
 
 
+def setup() :
+    pinMode(LeftDirA, OUTPUT, -1)
+    pinMode(LeftDirB, OUTPUT, -1)
+    pinMode(RightDirA, OUTPUT, -1)
+    pinMode(RightDirB, OUTPUT, -1)
 
+    #Start all LOW
+    analogWrite(LeftMotor, 0)
+    analogWrite(RightMotor, 0)
+    digitalWrite(LeftDirA, LOW)
+    digitalWrite(LeftDirB, LOW)
+    digitalWrite(RightDirA, LOW)
+    digitalWrite(RightDirB, LOW)
+
+ 
 #Server Information
 #SERVER_NAME = 'localhost'
 #SERVER_PORT = 3000
 SERVER_NAME = 'mriveralee.brobots.jit.su'
 SERVER_PORT = 80
 
-def setup() :
-    pinMode(LeftDirA, OUTPUT)
-    pinMode(LeftDirB, OUTPUT)
-    pinMode(RightDirA, OUTPUT)
-    pinMode(RightDirB, OUTPUT)
-
+ 
 
 
 class MainSocketSpace(BaseNamespace) :
@@ -47,6 +56,7 @@ class MainSocketSpace(BaseNamespace) :
 
     def on_disconnect(self) :
         print '[Disconnected]'
+        bbio_cleaup()
 
     def on_error(self, name, message)   :
         print '[Error] %s: %s' % (name, message)
@@ -82,31 +92,39 @@ def on_updated_bot_data(botData, *args) :
 
         #Get opposite value for other m1
         m1DirB = LOW
-        if (m1Dir == 0)
+        if (m1Dir == 0) :
             m1DirB = HIGH
             m1Dir = LOW
+        else :
+            m1DirB = LOW
+            m1Dir = HIGH
         #Get opposite value for other m2
         m2DirB = 0
-        if (m2Dir == 0)
+        if (m2Dir == 0) :
             m2DirB = HIGH
             m2Dir = LOW
+        else :
+            m2DirB = LOW
+            m2Dir = HIGH
 
-
+        m1DirB = LOW
+        m1Dir = LOW
+        m2DirB = LOW
+        m2Dir = LOW   
         #Write Speed to Motors
-        analogWrite(LeftMotor, m1PWM) m2P
+        analogWrite(LeftMotor, m1PWM)
         analogWrite(RightMotor, m2PWM)
  
         #Write Direction to Motors
-        digitalWrite(LeftDirA, m1Dir)
-        digitalWrite(LeftDirB, m1DirB)
-        digitalWrite(RightDirA, m2Dir)
-        digitalWrite(RightDirB, m2DirB)
+        # digitalWrite(LeftDirA, m1Dir)
+        # digitalWrite(LeftDirB, m1DirB)
+        # digitalWrite(RightDirA, m2Dir)
+        # digitalWrite(RightDirB, m2DirB)
 
-        #print "m1PWM: " + str(m1PWM)
-        #print "m1Dir: " + str(m1Dir)
-        #print "m2PWN " + str(m2PWM)
-        #print "m2Dir: " + str(m2Dir)
-
+        # print "m1PWM: " + str(m1PWM)
+        # print "m1Dir: " + str(m1Dir)
+        # print "m2PWN " + str(m2PWM)
+        # print "m2Dir: " + str(m2Dir)
         
 
 # Set up sockets on the local hosthttp://
@@ -118,6 +136,6 @@ mainSocket.on('updated-bot-data', on_updated_bot_data)
 
 mainSocket.wait()
 brobotSocket.wait()
-
-
+bbio_init()
+setup()
 
