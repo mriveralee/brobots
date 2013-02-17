@@ -9,10 +9,18 @@
 
 
 </head>
-<body>
+<body onload="init();">
     <center>
     <button onclick="sendDriveDataToServer()"> Driver </button>
     <button onclick="sendGripDataToServer()"> Gripper </button>
+
+    <h1>Leap JavaScript/WebSocket Sample</h1>
+    <div id="connection">WebSocket not connected</div>
+    <div id="main" style="text-align:left; visibility:hidden">
+      <p>JSON Frame data:</p>
+      <div id="output"></div>
+    </div>
+
     </center>
 </body>
 </html>
