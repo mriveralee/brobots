@@ -37,7 +37,7 @@ app.configure('development', function(){
 app.get('/driver', function(req, res) {
   var driverID = req.param('driver_id') ? req.param('driver_id') : "" + parseInt(Math.round(Math.random()*103843)+7);
   console.log("Driver ID: " + driverID);
-  res.render('index', {USER_TYPE: "Brobots - Driver"});
+  res.render('index', {USER_TYPE: "Driver"});
 });
 
 

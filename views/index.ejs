@@ -1,25 +1,51 @@
 <!DOCTYPE html>
 <head>
-    <title><%=USER_TYPE%></title>
+    <title>BroBots - <%=USER_TYPE%></title>
     <script type="text/javascript" src="../socket.io/socket.io.js"></script>
     <script type='text/javascript' src="jquery.min.js"></script> 
     <script type="text/javascript" src="brobots.js"></script>
+<!-- JQuery && JQueryIU && SlimBOX-->
+     
+        <% if (USER_TYPE != 'Bot') {%>
+      <link href='http://fonts.googleapis.com/css?family=Open+Sans|Happy+Monkey' rel='stylesheet' type='text/css'>
 
-
+        <link rel="stylesheet" href="./Happenstance Happy_files/jquery-ui.css" type="text/css">
+        
+        <script type="text/javascript" src="./Happenstance Happy_files/jquery.scrollTo-1.4.2-min.js"></script>
+        <script src="./Happenstance Happy_files/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="./Happenstance Happy_files/jquery.multi-accordion-1.5.3.js"></script>
+        <!-- Site Functions-->
+        <link rel="stylesheet" href="./Happenstance Happy_files/index.css" type="text/css">   
+        <% } %>    
 
 
 </head>
 <body onload="init();">
     <center>
-    <button onclick="sendDriveDataToServer()"> Driver </button>
-    <button onclick="sendGripDataToServer()"> Gripper </button>
+    <!--button onclick="sendDriveDataToServer()"> Driver </button-->
+    <!--button onclick="sendGripDataToServer()"> Gripper </button-->
 
-    <h1>Welcome to BroBots! <br>You are the <%=USER_TYPE%>!</h1>
-    <div id="connection">WebSocket not connected</div>
-    <div id="main" style="text-align:left; visibility:hidden">
-      <p>JSON Frame data:</p>
-      <div id="output"></div>
-    </div>
+    <div id="banner" style="text-align: center;display: block;">
+           <h1>Welcome to BroBots!</h1>
+           <span class="title" style="font-size: 12pt; position:relative; top:-20px;">  Robots with your bros.
+           </span><br>
+           <% if (USER_TYPE != 'Bot') {%>
+            <img src="./Happenstance Happy_files/social.png" style="width: 200px;position:relative; top:-10px;" alt="Happy Face">
+            <h2>You are the <b><%=USER_TYPE%></b>!</h2> 
+            <%}%>  
+            <div id="connection">WebSocket not connected</div>
+             <div id="main" style="text-align:left; visibility:hidden">
+             <h3>Live Data</h3>
+            <div id="output"></div>
+            </div>     
+        </div>
+        
+
+
+
+
+    
+    
 
     </center>
 </body>

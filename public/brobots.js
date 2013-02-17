@@ -1,5 +1,5 @@
 //Debug fxn for running tests
-var DEBUG = true;
+var DEBUG = false;
 /////// GLOBAL VARS 
 var GLOBAL = {};
 //Get user type from url
@@ -49,12 +49,12 @@ function receivedBotDataFromServer(botData) {
     if (GLOBAL.userType.toLowerCase() == CLIENT_TYPE.brobot) {
         var numValues = botData.values;
         if (numValues == 2) {
-            console.log("Bot Received Grip Data: " + botData );
-            console.log(botData);
+            //console.log("Bot Received Grip Data: " + botData );
+           // console.log(botData);
         }
         else if ( numValues == 4) {
-            console.log("Bot Received Drive Data!");
-            console.log(botData);
+           // console.log("Bot Received Drive Data!");
+           // console.log(botData);
         }
         
     }
@@ -248,8 +248,8 @@ function init() {
         ROBOT_yaw = RIGHT_yaw*YAW_mapping; // Now we've got robot yaw in [deg] between [0-90]
         ROBOT_yaw = ROBOT_yaw-ROBOT_turningAngle;  // Robot yaw [-45,+45] [deg]
         yawScalar = (ROBOT_yaw)/(2*ROBOT_turningAngle); // Dimensionless [-.5,.5]
-        console.log("RB Yaw: " + ROBOT_yaw);
-        console.log("Yaw Scalar: " + yawScalar);
+       // console.log("RB Yaw: " + ROBOT_yaw);
+       // console.log("Yaw Scalar: " + yawScalar);
         // Scale the PWM output for each motor  
         if(yawScalar < 0){
           // If we want to turn left:
@@ -265,13 +265,13 @@ function init() {
         //  -Direction Calculation (right hand)
         // ______________________________________
         document.getElementById("output").innerHTML =
-        'Left Hand Z: ' + leftHand.palmPosition[1]
-        + '<br>PWM Output: ' + PWM_desired
-        + '<br>Right Hand Yaw: '+ rightStrYaw
-        + '<br>M1 PWM: ' + m1PWM
-        + '<br>M1 Dir: ' + m1Dir
-        + '<br>M2 PWM: ' + m2PWM
-        + '<br>M2 Dir: ' + m2Dir;
+        'Left Hand Z: ' + Math.round(leftHand.palmPosition[1])
+        + '<br>PWM Output: ' + Math.round(PWM_desired)
+        + '<br>Right Hand Yaw: '+ Math.round(rightStrYaw)
+        + '<br>M1 PWM: ' + Math.round(m1PWM)
+        + '<br>M1 Dir: ' + Math.round(m1Dir)
+        + '<br>M2 PWM: ' + Math.round(m2PWM)
+        + '<br>M2 Dir: ' + Math.round(m2Dir);
 
         //Send our Vars to the Server Using sockets
         sendDriveDataToServer(m1PWM, m1Dir, m2PWM, m2Dir);
@@ -283,7 +283,7 @@ function init() {
       else{
         // If we don't have both hands recognized, set the motor PWM to 0 so they won't move!
         PWM_desired = 0;
-        document.getElementById("output").innerHTML = 'MORE THAN 2 HANDS!!!';
+        document.getElementById("output").innerHTML = "What's up with your hands, bro?";
       }
     } // End check for Hands being NULL
     // document.getElementById("output").innerHTML = 'No hands!!';
@@ -363,10 +363,10 @@ function captureGripperData(obj) {
         //  -Direction Calculation (right hand)
         // ______________________________________
         document.getElementById("output").innerHTML =
-          'Left Hand Z: ' + leftHand.palmPosition[1]
-        +  '<br>ARM Angle: ' + angle1
-        +  '<br>Right Hand Z: ' + rightHand.palmPosition[2]
-        +  '<br>Grip Angle: ' + angle2;
+          'Left Hand Z: ' + Math.round(leftHand.palmPosition[1])
+        +  '<br>ARM Angle: ' + Math.round(angle1)
+        +  '<br>Right Hand Z: ' + Math.round(rightHand.palmPosition[2])
+        +  '<br>Grip Angle: ' + Math.round(angle2);
 
 
         //Send our Vars to the Server Using sockets
@@ -377,7 +377,7 @@ function captureGripperData(obj) {
       // ______________________________________
       else{
         // If we don't have both hands recognized, set the motor PWM to 0 so they won't move!
-        document.getElementById("output").innerHTML = 'MORE THAN 2 HANDS!!!';
+        document.getElementById("output").innerHTML = "What's up with your hands, bro?";
       }
 
 
