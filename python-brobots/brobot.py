@@ -81,13 +81,15 @@ def on_updated_bot_data(botData, *args) :
         m2Dir = botData['m2Dir']
 
         #Get opposite value for other m1
-        m1DirB = 0
+        m1DirB = LOW
         if (m1Dir == 0)
-            m1DirB = 1
+            m1DirB = HIGH
+            m1Dir = LOW
         #Get opposite value for other m2
         m2DirB = 0
         if (m2Dir == 0)
-            m2DirB = 1
+            m2DirB = HIGH
+            m2Dir = LOW
 
 
         #Write Speed to Motors
