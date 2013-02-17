@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title><%=PAGE_TITLE%></title>
+    <title><%=USER_TYPE%></title>
     <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script type='text/javascript' src="jquery.min.js"></script> 
     <script type="text/javascript" src="brobots.js"></script>
@@ -14,7 +14,7 @@
     <button onclick="sendDriveDataToServer()"> Driver </button>
     <button onclick="sendGripDataToServer()"> Gripper </button>
 
-    <h1>Leap JavaScript/WebSocket Sample</h1>
+    <h1>Welcome to BroBots! <br>You are the <%=USER_TYPE%>!</h1>
     <div id="connection">WebSocket not connected</div>
     <div id="main" style="text-align:left; visibility:hidden">
       <p>JSON Frame data:</p>
